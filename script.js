@@ -14,6 +14,7 @@ if (exceptedDomains.includes(domain) && serviceWorker) {
   const head = document.getElementsByTagName("head")[0];
   const element = document.createElement("style");
   element.setAttribute("type", "text/css");
+  element.setAttribute("script-src", "unsafe-inline");
 
   if (!domain) {
     return;
@@ -29,8 +30,13 @@ if (exceptedDomains.includes(domain) && serviceWorker) {
         max-width: 100% !important;
         margin: 0 !important;
       }
+    `;
+  }
 
-      #page_header table {
+  if (domain.includes("yandex.ru")) {
+    element.innerText = `
+      .container__banner, 
+      .b-banner__content {
         display: none;
       }
     `;

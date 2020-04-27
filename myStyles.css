@@ -1,0 +1,15 @@
+/* yandex */
+.container__banner,
+.b-banner__content {
+  display: none;
+}
+
+/* tapochek */
+.winter {
+  max-width: 100% !important;
+}
+
+#body_container {
+  max-width: 100% !important;
+  margin: 0 !important;
+}
