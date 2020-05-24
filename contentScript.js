@@ -1,8 +1,8 @@
-var s = document.createElement("script");
+var script = document.createElement("script");
 
-s.src = chrome.extension.getURL("script.js");
-(document.head || document.documentElement).appendChild(s);
+script.src = chrome.extension.getURL("script.js");
+(document.head || document.documentElement).appendChild(script);
 
-s.onload = function() {
-  s.parentNode.removeChild(s);
+script.onload = function () {
+  script.parentNode.removeChild(script);
 };

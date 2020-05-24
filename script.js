@@ -1,13 +1,33 @@
+// store original window.open function for restoring in case it's needed
+const originalWindowOpen = window.open;
+// override original function so unwanted malware cannot use it in its dirty needs
 window.open = function () {};
+
+document.onkeydown = (event) => {
+  const BUTTON_KEYCODE_D = 68;
+
+  if (event.ctrlKey && event.keyCode === BUTTON_KEYCODE_D) {
+    toggleWindowOpenReplacement();
+  }
+};
+
+function toggleWindowOpenReplacement() {
+  const isOriginalWindowOpen = window.open === originalWindowOpen;
+  window.open = isOriginalWindowOpen ? function () {} : originalWindowOpen;
+}
 
 const domain = window.location && window.location.origin;
 
 const exceptedDomains = ["https://e.mail.ru"];
 
-const serviceWorker = window.navigator && window.navigator.serviceWorker;
+try {
+  const serviceWorker = window.navigator && window.navigator.serviceWorker;
 
-if (exceptedDomains.includes(domain) && serviceWorker) {
-  serviceWorker.register = function () {};
+  if (exceptedDomains.includes(domain) && serviceWorker) {
+    serviceWorker.register = function () {};
+  }
+} catch (error) {
+  // silent
 }
 
 (function injectCSS() {
