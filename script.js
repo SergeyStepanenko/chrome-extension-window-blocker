@@ -76,10 +76,42 @@ try {
     `;
   }
 
+  if (domain.includes("pornhub.com")) {
+    element.innerText = `
+      #age-verification-container,
+      #age-verification-wrapper {
+        display: none !important;
+      }
+    `;
+  }
+
   if (domain.includes("youtube.com")) {
+    let initialVolume;
+
     setInterval(() => {
-      const skipButton = document.querySelector(".ytp-ad-skip-button");
-      skipButton && skipButton.click();
+      try {
+        const skipButton = document.querySelector(".ytp-ad-skip-button");
+        skipButton && skipButton.click();
+        const videoPlayer = document.querySelector(".html5-main-video");
+        const adShowing = document.querySelector(".ad-showing");
+
+        if (adShowing && videoPlayer) {
+          adShowing.style.opacity = "0.1";
+
+          if (videoPlayer.volume > 0) {
+            initialVolume = videoPlayer.volume;
+          }
+
+          videoPlayer.volume = 0;
+        } else if (videoPlayer) {
+          const vp = document.querySelector(".html5-video-player");
+          videoPlayer.style.opacity = "1";
+          videoPlayer.volume = initialVolume;
+          vp.style.opacity = "1";
+        }
+      } catch (error) {
+        console.error(`Ads Blocker Error: ${error}`);
+      }
     }, 100);
   }
 
