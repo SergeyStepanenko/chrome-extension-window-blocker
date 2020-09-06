@@ -1,7 +1,12 @@
+const domain = window.location && window.location.origin;
+const exceptedDomains = ["https://e.mail.ru"];
+
 // store original window.open function for restoring in case it's needed
 const originalWindowOpen = window.open;
 // override original function so unwanted malware cannot use it in its dirty needs
-window.open = function () {};
+window.open = function (link) {
+  appendClickableNotification(link);
+};
 
 document.onkeydown = (event) => {
   const BUTTON_KEYCODE_D = 68;
@@ -15,10 +20,6 @@ function toggleWindowOpenReplacement() {
   const isOriginalWindowOpen = window.open === originalWindowOpen;
   window.open = isOriginalWindowOpen ? function () {} : originalWindowOpen;
 }
-
-const domain = window.location && window.location.origin;
-
-const exceptedDomains = ["https://e.mail.ru"];
 
 try {
   const serviceWorker = window.navigator && window.navigator.serviceWorker;
@@ -75,6 +76,36 @@ try {
     `;
   }
 
+  if (domain.includes("youtube.com")) {
+    setInterval(() => {
+      const skipButton = document.querySelector(".ytp-ad-skip-button");
+      skipButton && skipButton.click();
+    }, 100);
+  }
+
   const head = document.getElementsByTagName("head")[0];
   head.appendChild(element);
 })();
+
+function createNotificationElement(link) {
+  const div = document.createElement("div");
+  div.style = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 99999999999;
+    background-color: grey;
+    cursor: pointer;
+    font-size: 12px;
+  `;
+  div.innerHTML = link;
+  div.onclick = () => originalWindowOpen(link);
+
+  return div;
+}
+
+function appendClickableNotification(link) {
+  const element = createNotificationElement(link);
+  document.body.appendChild(element);
+  setTimeout(() => document.body.removeChild(element), 4000);
+}
