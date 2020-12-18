@@ -123,12 +123,15 @@ function createNotificationElement(link) {
   const div = document.createElement("div");
   div.style = `
     position: fixed;
-    top: 0;
-    left: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     z-index: 99999999999;
     background-color: grey;
     cursor: pointer;
-    font-size: 12px;
+    padding: 8px 16px;
+    font-size: 48px;
+    border-radius: 8px;
   `;
   div.innerHTML = link;
   div.onclick = () => originalWindowOpen(link);
