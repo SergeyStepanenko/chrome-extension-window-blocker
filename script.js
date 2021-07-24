@@ -4,9 +4,11 @@ const exceptedDomains = ["https://e.mail.ru"];
 // store original window.open function for restoring in case it's needed
 const originalWindowOpen = window.open;
 // override original function so unwanted malware cannot use it in its dirty needs
-window.open = function (link) {
-  appendClickableNotification(link);
-};
+if (domain.includes("tapochek.net")) {
+  window.open = function (href) {
+    appendClickableNotification(href);
+  };
+}
 
 document.onkeydown = (event) => {
   const BUTTON_KEYCODE_D = 68;
@@ -54,6 +56,10 @@ try {
       #octop {
         display: none !important;
       }
+      
+      #qwerty_wrap {
+        display: none !important;
+      }
     `;
   }
 
@@ -64,6 +70,14 @@ try {
       .mail-Layout-Content :nth-child(4),
       .mail-Layout-Aside-Inner-Box :nth-child(7) {
         display: none;
+      }
+      .serp-item {
+        position: relative;
+      }
+      .serp-item .label_theme_direct {
+        background-color: red !important;
+        width: 100%;
+        opacity: 0.5;
       }
     `;
   }
@@ -85,41 +99,25 @@ try {
     `;
   }
 
-  if (domain.includes("youtube.com")) {
-    let initialVolume;
-
-    setInterval(() => {
-      try {
-        const skipButton = document.querySelector(".ytp-ad-skip-button");
-        skipButton && skipButton.click();
-        const videoPlayer = document.querySelector(".html5-main-video");
-        const adShowing = document.querySelector(".ad-showing");
-
-        if (adShowing && videoPlayer) {
-          adShowing.style.opacity = "0.1";
-
-          if (videoPlayer.volume > 0) {
-            initialVolume = videoPlayer.volume;
-          }
-
-          videoPlayer.volume = 0;
-        } else if (videoPlayer) {
-          const vp = document.querySelector(".html5-video-player");
-          videoPlayer.style.opacity = "1";
-          videoPlayer.volume = initialVolume;
-          vp.style.opacity = "1";
-        }
-      } catch (error) {
-        console.error(`Ads Blocker Error: ${error}`);
+  if (domain.includes("auto.ru")) {
+    element.innerText = `
+      .VertisAds,
+      .LayoutSidebar__sidebar {
+        display: none !important;
       }
-    }, 100);
+      
+      .LayoutSidebar__content {
+        margin-left: auto;
+        margin-right: auto;
+      }
+    `;
   }
 
   const head = document.getElementsByTagName("head")[0];
   head.appendChild(element);
 })();
 
-function createNotificationElement(link) {
+function createNotificationElement(href) {
   const div = document.createElement("div");
   div.style = `
     position: fixed;
@@ -133,14 +131,37 @@ function createNotificationElement(link) {
     font-size: 48px;
     border-radius: 8px;
   `;
-  div.innerHTML = link;
-  div.onclick = () => originalWindowOpen(link);
+  div.innerHTML = href;
+  div.onclick = () => originalWindowOpen(href);
 
   return div;
 }
 
-function appendClickableNotification(link) {
-  const element = createNotificationElement(link);
+function appendClickableNotification(href) {
+  const element = createNotificationElement(href);
   document.body.appendChild(element);
   setTimeout(() => document.body.removeChild(element), 4000);
+}
+
+if (["http://deploy.lan", "http://cportal.lan"].includes(domain)) {
+  window.addEventListener("load", function () {
+    const inputLogin =
+      document.querySelector("#login") ||
+      document.querySelector("#inputLogin3") ||
+      document.querySelector("#inputEmail");
+
+    const inputPassword =
+      document.querySelector("#password") ||
+      document.querySelector("#inputPassword3") ||
+      document.querySelector("#inputPassword");
+
+    if (!inputLogin || !inputPassword) {
+      return;
+    }
+
+    inputLogin.value = "stepanenko";
+    inputPassword.value = "46Bu7tDN";
+
+    document.querySelector('button[type="submit"]').click();
+  });
 }
