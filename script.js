@@ -53,11 +53,10 @@ try {
         margin: 0 !important;
       }
 
-      #octop {
-        display: none !important;
-      }
-      
-      #qwerty_wrap {
+      #octop,
+      #qwerty_wrap,
+      #tmp_div_vid_vpaut,
+      #vid_vpaut_div {
         display: none !important;
       }
     `;
