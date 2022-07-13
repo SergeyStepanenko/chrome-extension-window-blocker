@@ -92,7 +92,8 @@ try {
   if (domain.includes("pornhub.com")) {
     element.innerText = `
       #age-verification-container,
-      #age-verification-wrapper {
+      #age-verification-wrapper,
+      #pb_template {
         display: none !important;
       }
     `;
@@ -108,6 +109,14 @@ try {
       .LayoutSidebar__content {
         margin-left: auto;
         margin-right: auto;
+      }
+    `;
+  }
+
+  if (domain.includes("redmine.mamba.ru")) {
+    element.innerText = `
+      .issue {
+        background-color: #eef5ff !important;
       }
     `;
   }
