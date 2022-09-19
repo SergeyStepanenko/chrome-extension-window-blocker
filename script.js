@@ -1,45 +1,45 @@
-const domain = window.location && window.location.origin;
-const exceptedDomains = ["https://e.mail.ru"];
+const domain = window.location && window.location.origin
+const exceptedDomains = ["https://e.mail.ru"]
 
 // store original window.open function for restoring in case it's needed
-const originalWindowOpen = window.open;
+const originalWindowOpen = window.open
 // override original function so unwanted malware cannot use it in its dirty needs
 if (domain.includes("tapochek.net")) {
   window.open = function (href) {
-    appendClickableNotification(href);
-  };
+    appendClickableNotification(href)
+  }
 }
 
 document.onkeydown = (event) => {
-  const BUTTON_KEYCODE_D = 68;
+  const BUTTON_KEYCODE_D = 68
 
   if (event.ctrlKey && event.keyCode === BUTTON_KEYCODE_D) {
-    toggleWindowOpenReplacement();
+    toggleWindowOpenReplacement()
   }
-};
+}
 
 function toggleWindowOpenReplacement() {
-  const isOriginalWindowOpen = window.open === originalWindowOpen;
-  window.open = isOriginalWindowOpen ? function () {} : originalWindowOpen;
+  const isOriginalWindowOpen = window.open === originalWindowOpen
+  window.open = isOriginalWindowOpen ? function () {} : originalWindowOpen
 }
 
 try {
-  const serviceWorker = window.navigator && window.navigator.serviceWorker;
+  const serviceWorker = window.navigator && window.navigator.serviceWorker
 
   if (exceptedDomains.includes(domain) && serviceWorker) {
-    serviceWorker.register = function () {};
+    serviceWorker.register = function () {}
   }
 } catch (error) {
   // silent
 }
 
-(function injectCSS() {
-  const element = document.createElement("style");
-  element.setAttribute("type", "text/css");
-  element.setAttribute("script-src", "unsafe-inline");
+;(function injectCSS() {
+  const element = document.createElement("style")
+  element.setAttribute("type", "text/css")
+  element.setAttribute("script-src", "unsafe-inline")
 
   if (!domain) {
-    return;
+    return
   }
 
   if (domain.includes("tapochek.net")) {
@@ -59,7 +59,7 @@ try {
       #vid_vpaut_div {
         display: none !important;
       }
-    `;
+    `
   }
 
   if (domain.includes("yandex.ru")) {
@@ -78,7 +78,7 @@ try {
         width: 100%;
         opacity: 0.5;
       }
-    `;
+    `
   }
 
   if (domain.includes("vk.com")) {
@@ -86,7 +86,7 @@ try {
       #ads_left {
         display: none !important;
       }
-    `;
+    `
   }
 
   if (domain.includes("pornhub.com")) {
@@ -96,7 +96,7 @@ try {
       #pb_template {
         display: none !important;
       }
-    `;
+    `
   }
 
   if (domain.includes("auto.ru")) {
@@ -110,7 +110,42 @@ try {
         margin-left: auto;
         margin-right: auto;
       }
-    `;
+    `
+  }
+
+  if (domain.includes("fux.com")) {
+    element.innerText = `
+      .related-kodplayer,
+      .video-added,
+      .interstitial,
+      .ugc,
+      iframe,
+      .cppBanner {
+        display: none !important;
+      }
+      div:has(> iframe) {
+        display: none !important;
+      }
+      .vjs-progress-holder {
+        height: 20px important;
+      }
+    `
+  }
+
+  if (domain.includes("olx.co.id")) {
+    element.innerText = `
+      #baxter-ads-details-top,
+      #baxter-ads-results-top,
+      #baxter-ads-details-middle-bottom,
+      #baxter-ads-details-bottom,
+      #baxter-ads-details-middle {
+        display: none !important;
+      }
+
+      img[alt="lamudi-branding"] {
+        display: none !important;
+      }
+    `
   }
 
   if (domain.includes("redmine.mamba.ru")) {
@@ -118,15 +153,23 @@ try {
       .issue {
         background-color: #eef5ff !important;
       }
-    `;
+    `
+
+    if (window.location.hash) {
+      setTimeout(() => {
+        const elementId = window.location.hash.replace("#", "")
+        const element = document.getElementById(elementId)
+        element.style.backgroundColor = "#eef5ff"
+      }, 1000)
+    }
   }
 
-  const head = document.getElementsByTagName("head")[0];
-  head.appendChild(element);
-})();
+  const head = document.getElementsByTagName("head")[0]
+  head.appendChild(element)
+})()
 
 function createNotificationElement(href) {
-  const div = document.createElement("div");
+  const div = document.createElement("div")
   div.style = `
     position: fixed;
     top: 50%;
@@ -138,17 +181,17 @@ function createNotificationElement(href) {
     padding: 8px 16px;
     font-size: 48px;
     border-radius: 8px;
-  `;
-  div.innerHTML = href;
-  div.onclick = () => originalWindowOpen(href);
+  `
+  div.innerHTML = href
+  div.onclick = () => originalWindowOpen(href)
 
-  return div;
+  return div
 }
 
 function appendClickableNotification(href) {
-  const element = createNotificationElement(href);
-  document.body.appendChild(element);
-  setTimeout(() => document.body.removeChild(element), 4000);
+  const element = createNotificationElement(href)
+  document.body.appendChild(element)
+  setTimeout(() => document.body.removeChild(element), 4000)
 }
 
 if (["http://deploy.lan", "http://cportal.lan"].includes(domain)) {
@@ -156,20 +199,20 @@ if (["http://deploy.lan", "http://cportal.lan"].includes(domain)) {
     const inputLogin =
       document.querySelector("#login") ||
       document.querySelector("#inputLogin3") ||
-      document.querySelector("#inputEmail");
+      document.querySelector("#inputEmail")
 
     const inputPassword =
       document.querySelector("#password") ||
       document.querySelector("#inputPassword3") ||
-      document.querySelector("#inputPassword");
+      document.querySelector("#inputPassword")
 
     if (!inputLogin || !inputPassword) {
-      return;
+      return
     }
 
-    inputLogin.value = "stepanenko";
-    inputPassword.value = "46Bu7tDN";
+    inputLogin.value = "stepanenko"
+    inputPassword.value = "46Bu7tDN"
 
-    document.querySelector('button[type="submit"]').click();
-  });
+    document.querySelector('button[type="submit"]').click()
+  })
 }
