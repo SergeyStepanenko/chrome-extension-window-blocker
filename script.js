@@ -164,6 +164,17 @@ try {
     }
   }
 
+  if (domain.includes("surf-forecast.com")) {
+    element.innerText = `
+      .sidebar {
+        display: none !important;
+      }
+      [data-google-query-id] {
+        display: none !important;
+      }
+    `
+  }
+
   const head = document.getElementsByTagName("head")[0]
   head.appendChild(element)
 })()
@@ -215,4 +226,90 @@ if (["http://deploy.lan", "http://cportal.lan"].includes(domain)) {
 
     document.querySelector('button[type="submit"]').click()
   })
+}
+
+if (["https://staff.mamba.ru"].includes(domain)) {
+  window.addEventListener("load", function () {
+    const inputLogin = document.querySelector("#inputLogin3")
+    const inputPassword = document.querySelector("#inputPassword3")
+
+    if (!inputLogin || !inputPassword) {
+      return
+    }
+
+    setTimeout(() => {
+      inputLogin.value = "stepanenko"
+      inputPassword.value = "HBGnw4MFNt"
+
+      if (document.querySelectorAll(".alert.alert-danger.alarm")) {
+        return
+      }
+
+      document.querySelector('button[type="submit"]').click()
+    }, 1000)
+  })
+}
+
+if (domain === "https://tinder.com") {
+  let intervalId = 0
+
+  window.__tindergo = () => {
+    const likeButton = findLikeButton()
+
+    if (!likeButton) {
+      return
+    }
+
+    intervalId = setInterval(() => {
+      likeButton.click()
+    }, 1500)
+  }
+
+  window.__tinderstop = () => {
+    clearInterval(intervalId)
+  }
+
+  // Save original getCurrentPosition for the future
+  const origGetCurrentPosition = navigator.geolocation.getCurrentPosition
+
+  navigator.geolocation.getCurrentPosition = function (success) {
+    console.info("fake position provided")
+
+    const fakePosition = {
+      coords: {
+        accuracy: 20,
+        altitude: null,
+        altitudeAccuracy: null,
+        heading: null,
+        // Патриаршие пруды
+        latitude: 55.7644348,
+        longitude: 37.592083,
+        speed: null,
+      },
+      timestamp: Date.now(),
+    }
+
+    success(fakePosition)
+  }
+}
+
+const findLikeButton = () => {
+  const divs = document.querySelectorAll("div")
+  divs.find = [].find
+
+  const likeDiv = divs.find((div) => {
+    div.classList.find = [].find
+    return div.classList.find((className) => {
+      return className === "Bdc($c-ds-border-gamepad-like-default)"
+    })
+  })
+
+  const likeButton = likeDiv?.children?.[0]
+
+  if (!likeButton) {
+    console.error("Button is not found")
+    return
+  }
+
+  return likeButton
 }
