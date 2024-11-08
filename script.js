@@ -269,28 +269,24 @@ if (domain === "https://tinder.com") {
     clearInterval(intervalId)
   }
 
-  // Save original getCurrentPosition for the future
-  const origGetCurrentPosition = navigator.geolocation.getCurrentPosition
+  const origWatchPosition = navigator.geolocation.watchPosition
+  // navigator.geolocation.watchPosition = function (callback) {
+  //   console.log(">>> watchPosition is replaced")
 
-  navigator.geolocation.getCurrentPosition = function (success) {
-    console.info("fake position provided")
-
-    const fakePosition = {
-      coords: {
-        accuracy: 20,
-        altitude: null,
-        altitudeAccuracy: null,
-        heading: null,
-        // Патриаршие пруды
-        latitude: 55.7644348,
-        longitude: 37.592083,
-        speed: null,
-      },
-      timestamp: Date.now(),
-    }
-
-    success(fakePosition)
-  }
+  //   callback({
+  //     coords: {
+  //       accuracy: 20,
+  //       altitude: null,
+  //       altitudeAccuracy: null,
+  //       heading: null,
+  //       // Eiffel Tower
+  //       latitude: 43.238949,
+  //       longitude: 76.889709,
+  //       speed: null,
+  //     },
+  //     timestamp: Date.now(),
+  //   })
+  // }
 }
 
 const findLikeButton = () => {
