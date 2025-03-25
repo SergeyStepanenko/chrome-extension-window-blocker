@@ -166,11 +166,20 @@ try {
 
   if (domain.includes("surf-forecast.com")) {
     element.innerText = `
-      .sidebar {
+      .sidebar, 
+      .dtabs-flex-container, 
+      .break-header-dynamic,
+      .signup-prompt  {
         display: none !important;
       }
       [data-google-query-id] {
         display: none !important;
+      }
+      .not_in_print {
+        display: none !important;
+      }
+      #content {
+        width: 100% !important;
       }
     `
   }
